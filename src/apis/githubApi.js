@@ -1,4 +1,5 @@
 import axios from 'axios';
+import _ from 'lodash';
 
 const api = axios.create({
     baseURL: 'https://api.github.com',
@@ -7,6 +8,13 @@ const api = axios.create({
     }
 });
 
+//TODO: Tidy this mess up
+// Foreach repo...
+// Fetch all PR's
+// Select those opened within the last month
+// Fetch reviews
+// Add review data to array
+// Select users
 export const fetchCodeReviewStats = async () => {
     const response = await api.get(`/repos/${process.env.REACT_APP_REPO}/pulls?state=all`);
 
@@ -17,9 +25,9 @@ export const fetchCodeReviewStats = async () => {
     const promises = reviewUrls.map(url => api.get(url));
     const reviews = await Promise.all(promises);
     
-    const thing = [];
+    const results = [];
     reviews.forEach(review => (review.data.forEach(({state, user, submitted_at}) => (
-        thing.push({
+        results.push({
             "date": submitted_at,
             "user": user.login,
             "avatar": user.avatar_url,
@@ -28,8 +36,13 @@ export const fetchCodeReviewStats = async () => {
         })
     ))));
 
-    return ["rodhall85", "nikazdanovich", "Tom9416", "mikepro"].map(user => {
-        const filtered = thing.filter(t => t.user === user);
+    const users = _.chain(results)
+        .map('user')
+        .uniq()
+        .value();
+    
+    return users.map(user => {
+        const filtered = results.filter(t => t.user === user);
         
         const rejected = filtered.filter(ff => ff.state === "CHANGES_REQUESTED").length;
         const commented = filtered.filter(ff => ff.state === "COMMENTED").length;
