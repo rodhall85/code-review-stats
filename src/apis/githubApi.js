@@ -3,12 +3,12 @@ import axios from 'axios';
 const api = axios.create({
     baseURL: 'https://api.github.com',
     headers: {
-        Authorization: 'Bearer 0d02ec0546bebe7c3d7987992a988fde3710d1c0'
+        Authorization: `Bearer ${process.env.REACT_APP_GITHUB_API_KEY}`
     }
 });
 
-export const fetchStats = async () => {
-    const response = await api.get("/repos/comparetheMarket/home.risk-journey/pulls?state=all");
+export const fetchCodeReviewStats = async () => {
+    const response = await api.get(`/repos/${process.env.REACT_APP_REPO}/pulls?state=all`);
 
     const reviewUrls = response.data
         .filter(pull => new Date(pull.created_at).getTime() > new Date().getTime() - 12096e5)
@@ -28,8 +28,7 @@ export const fetchStats = async () => {
         })
     ))));
 
-    console.log('tt',thing);
-    const proper = ["rodhall85", "nikazdanovich", "Tom9416", "mikepro"].map(user => {
+    return ["rodhall85", "nikazdanovich", "Tom9416", "mikepro"].map(user => {
         const filtered = thing.filter(t => t.user === user);
         
         const rejected = filtered.filter(ff => ff.state === "CHANGES_REQUESTED").length;
@@ -40,6 +39,4 @@ export const fetchStats = async () => {
 
         return {user, avatar, url, rejected, commented, approved };
     });
-
-    console.log(proper);
 } 

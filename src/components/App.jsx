@@ -4,7 +4,7 @@ import CodeReviewStats from './CodeReviewStats';
 
 const App = () => {
     return (
-        <div className="ui container">
+        <div className="">
             <h1>Homies Code Review Stats</h1>
             <CodeReviewStats />
         </div>
