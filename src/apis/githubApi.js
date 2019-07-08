@@ -11,6 +11,7 @@ const api = axios.create({
 export const fetchCodeReviewStats = async () => {
     const repos = [
         // Populate these here for now
+        'comparethemarket/home.risk-journey'
     ];
     
     const results = [];
