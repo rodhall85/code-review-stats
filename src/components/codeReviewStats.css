@@ -15,7 +15,7 @@
 .username {
     vertical-align: middle;
     display: inline-block;
-    width: 200px;
+    width: 120px;
     font-family: 'tahoma';
     color: #eee;
 }
@@ -24,7 +24,7 @@
     vertical-align: middle;
     display: inline-block;
     text-align: center;
-    width: 80px;
+    width: 40px;
     padding: 5px 20px;
     margin: 0 5px;
     border-radius: 10%;

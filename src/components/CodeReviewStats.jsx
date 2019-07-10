@@ -28,14 +28,6 @@ const CodeReviewStats = ({ fetchStats, stats }) => {
 
   return (
     <div>
-      <div className="row">
-        <span className="img-small"></span>
-        <span className="username"></span>
-        <span className="heading">Rejected</span>
-        <span className="heading">Commented</span>
-        <span className="heading">Approved</span>
-        <span className="heading">Total</span>
-      </div>
       {renderStats()}
     </div>
   );
