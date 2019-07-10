@@ -13,7 +13,7 @@ const CodeReviewStats = ({ fetchStats, stats }) => {
 
   const renderStats = () => {
     return stats.map((stat, idx) => (
-      <div key={idx}>
+      <div key={idx} className="row">
         <img className="img img-small" src={stat.avatar} alt={stat.user} />
         <span className="username">{stat.user}</span>
         <span className="stat stat-rejected stat">{stat.rejected}</span>
@@ -26,7 +26,19 @@ const CodeReviewStats = ({ fetchStats, stats }) => {
     ));
   };
 
-  return <div>{renderStats()}</div>;
+  return (
+    <div>
+      <div className="row">
+        <span className="img-small"></span>
+        <span className="username"></span>
+        <span className="heading">Rejected</span>
+        <span className="heading">Commented</span>
+        <span className="heading">Approved</span>
+        <span className="heading">Total</span>
+      </div>
+      {renderStats()}
+    </div>
+  );
 };
 
 const mapStateToProps = state => {

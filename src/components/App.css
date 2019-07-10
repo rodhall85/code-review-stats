@@ -3,5 +3,17 @@
   max-width: 1080px;
   width: 80%;
   margin: auto;
-  background: #eee;
+  background: #333;
+}
+
+.container h1 {
+  padding: 30px 0;
+  border-bottom: 3px solid #222;
+  text-align: center;
+}
+
+body {
+  background: #222;
+  color: #eee;
+  font-family: 'tahoma';
 }
