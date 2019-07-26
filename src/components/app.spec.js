@@ -1,37 +1,61 @@
-import React from 'react';
-import { Provider } from 'react-redux';
-import { mount } from 'enzyme';
+import React from "react";
+import { Provider } from "react-redux";
+import { mount } from "enzyme";
+import axios from 'axios';
+import { storeFactory } from "../../test/testUtils";
+import App from "./App";
+import "../../test/setupTests";
+import { mockRequest } from '../../__mocks__/axios2';
 
-import { storeFactory } from '../../test/testUtils';
-import App from './App';
-import '../../test/setupTests';
+
+jest.mock('axios');
 
 let store;
 
-const setup = (initialState={}) => {
+const setup = (initialState = {}) => {
   store = storeFactory(initialState);
   return mount(
     <Provider store={store}>
       <App />
-    </Provider>);
+    </Provider>
+  );
 };
 
-describe('codeReviewStats', () => {
-  it('should render without error', () => {
-    const wrapper = setup({ 
-      stats: [
-        {user: "bob", rejected: 1, commented: 2, approved: 3 }
-    ]});
-    console.log(wrapper.debug());
-    expect(wrapper).not.toBe(undefined);
-  });
+describe("codeReviewStats", () => {
+  it("should render without error", async () => {
+    const mocked = mockRequest('/repos/comparethemarket.risk-journey/pulls?state=all', [{
+      created_at: new Date(),
+      url: 'fakeurl'
+    }])
+    console.log("TCL: mocked", mocked)
 
-  it('should have stuff in the store', () => {
-    const wrapper = setup({ 
-      stats: [
-        {user: "bob", rejected: 1, commented: 2, approved: 3 }
-    ]});
-    console.log(store.getState());
-    expect(wrapper).not.toBe(undefined);
+    axios.create.mockResolvedValue(() => {
+      console.log('dfdf');
+      return {
+        get: () => {}
+      }
+    })
+    console.log("TCL: axios", axios.mock)
+    axios.get.mockResolvedValue([{
+      created_at: new Date(),
+      url: 'fakeurl'
+    }])
+
+    const wrapper = setup();
+
+    await new Promise(resolve => {
+      setTimeout(() => {
+        console.log('waitning now');
+        resolve();
+      }, 10);
+    });
+    
+    const stats = store.getState().stats;
+
+    expect(stats.bob.user).toBe('bob');
+    expect(stats.bob.rejected).toBe(1);
+    expect(stats.bob.commented).toBe(0);
+    expect(stats.bob.approved).toBe(0);
+
   });
 });

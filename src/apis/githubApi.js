@@ -13,14 +13,16 @@ export const fetchCodeReviewStats = async () => {
         // Populate these here for now
         'comparethemarket/home.risk-journey'
     ];
+    console.log("TCL: fetchCodeReviewStats -> repos", repos)
     
     const results = [];
     await new Promise((resolve) => {
         repos.forEach(async (repo, index) => {
             const response = await api.get(`/repos/${repo}/pulls?state=all`);
             const reviewUrls = response.data
-                .filter(pull => new Date(pull.created_at).getTime() > new Date().getTime() - 12096e5)
-                .map(pull => `${pull.url}/reviews`);
+            .filter(pull => new Date(pull.created_at).getTime() > new Date().getTime() - 12096e5)
+            .map(pull => `${pull.url}/reviews`);
+            console.log("TCL: fetchCodeReviewStats -> reviewUrls", reviewUrls)
             
             const promises = reviewUrls.map(url => api.get(url));
             const reviews = await Promise.all(promises);
@@ -35,10 +37,11 @@ export const fetchCodeReviewStats = async () => {
                     state
                 });
             })));
-
+            
             if (index === 0) resolve();
         });
     });
+    console.log("TCL: fetchCodeReviewStats -> results", results)
     
     console.log(results);
     const users = _.chain(results)
